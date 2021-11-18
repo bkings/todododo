@@ -7,15 +7,26 @@ class Todo extends StatefulWidget {
 
 class _TodoState extends State<Todo> {
   List<String> todoList = [];
+  Map data = {};
 
-  void addTodo() {
-    setState(() {
-      todoList.add('Item');
-    });
+  void addTodo(String task) {
+    if (task.length > 0) {
+      setState(() {
+        todoList.add(task);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    /*try {
+      print('checin');
+      data = ModalRoute.of(context)!.settings.arguments as Map;
+      print('data $data');
+      addTodo(data['inputValue']);
+    } catch (e) {
+      print(e);
+    }*/
     return Scaffold(
       appBar: AppBar(
         title: Text('Todo List'),
@@ -29,7 +40,13 @@ class _TodoState extends State<Todo> {
             );
           }),
       floatingActionButton: FloatingActionButton(
-        onPressed: addTodo,
+        onPressed: () async {
+          dynamic input = await Navigator.pushNamed(context, '/new-todo');
+          setState(() {
+            data = {'inputValue': input['inputValue']};
+          });
+          addTodo(data['inputValue']);
+        },
         child: Icon(Icons.add),
       ),
     );
