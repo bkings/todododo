@@ -17,16 +17,31 @@ class _TodoState extends State<Todo> {
     }
   }
 
+  void removeItem(int index) {
+    setState(() {
+      todoList.removeAt(index);
+    });
+  }
+
+  void promptRemoveItem(int index) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Remove ${todoList[index]} ?'),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
+              TextButton(onPressed: () {
+                removeItem(index);
+                Navigator.of(context).pop();
+              }, child: Text('Remove'))
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    /*try {
-      print('checin');
-      data = ModalRoute.of(context)!.settings.arguments as Map;
-      print('data $data');
-      addTodo(data['inputValue']);
-    } catch (e) {
-      print(e);
-    }*/
     return Scaffold(
       appBar: AppBar(
         title: Text('Todo List'),
@@ -37,6 +52,7 @@ class _TodoState extends State<Todo> {
           itemBuilder: (context, index) {
             return ListTile(
               title: Text(todoList[index]),
+              onLongPress: () => promptRemoveItem(index),
             );
           }),
       floatingActionButton: FloatingActionButton(
