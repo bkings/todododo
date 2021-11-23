@@ -50,9 +50,14 @@ class _TodoState extends State<Todo> {
       body: ListView.builder(
           itemCount: todoList.length,
           itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(todoList[index]),
-              onLongPress: () => promptRemoveItem(index),
+            return Container(
+              margin: EdgeInsets.all(1.5),
+              child: Card(
+                child: ListTile(
+                  title: Text(todoList[index]),
+                  onLongPress: () => promptRemoveItem(index),
+                ),
+              ),
             );
           }),
       floatingActionButton: FloatingActionButton(
