@@ -8,6 +8,7 @@ class Todo extends StatefulWidget {
 class _TodoState extends State<Todo> {
   List<String> todoList = [];
   Map data = {};
+  bool isChecked = false;
 
   void addTodo(String task) {
     if (task.length > 0) {
@@ -30,13 +31,27 @@ class _TodoState extends State<Todo> {
           return AlertDialog(
             title: Text('Remove ${todoList[index]} ?'),
             actions: [
-              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
-              TextButton(onPressed: () {
-                removeItem(index);
-                Navigator.of(context).pop();
-              }, child: Text('Remove'))
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                    removeItem(index);
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Remove'))
             ],
           );
+        });
+  }
+
+  Widget checkBox() {
+    return Checkbox(
+        value: isChecked,
+        onChanged: (bool? value) {
+          setState(() {
+            isChecked = value!;
+          });
         });
   }
 
@@ -54,6 +69,7 @@ class _TodoState extends State<Todo> {
               margin: EdgeInsets.all(1.5),
               child: Card(
                 child: ListTile(
+                  leading: checkBox(),
                   title: Text(todoList[index]),
                   onLongPress: () => promptRemoveItem(index),
                 ),
