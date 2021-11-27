@@ -55,6 +55,30 @@ class _TodoState extends State<Todo> {
         });
   }
 
+  Widget listTile(index) {
+    return ListTile(
+      title: Text(todoList[index]),
+      onLongPress: () => promptRemoveItem(index),
+    );
+  }
+
+  Widget checkBoxListTile(index) {
+    return CheckboxListTile(
+        title: Text(todoList[index]),
+        value: isChecked,
+        selected: isChecked,
+        onChanged: (bool? value) {
+          if(value!) {
+            promptRemoveItem(index);
+          }
+          setState(() {
+            isChecked = value!;
+          });
+        },
+      controlAffinity: ListTileControlAffinity.leading,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,11 +92,7 @@ class _TodoState extends State<Todo> {
             return Container(
               margin: EdgeInsets.all(1.5),
               child: Card(
-                child: ListTile(
-                  leading: checkBox(),
-                  title: Text(todoList[index]),
-                  onLongPress: () => promptRemoveItem(index),
-                ),
+                child: checkBoxListTile(index),
               ),
             );
           }),
