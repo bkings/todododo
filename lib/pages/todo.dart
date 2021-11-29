@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_dodo/services/TodoItem.dart';
 
 class Todo extends StatefulWidget {
   @override
@@ -6,14 +7,13 @@ class Todo extends StatefulWidget {
 }
 
 class _TodoState extends State<Todo> {
-  List<String> todoList = [];
+  List<TodoItem> todoList = [];
   Map data = {};
-  bool isChecked = false;
 
   void addTodo(String task) {
     if (task.length > 0) {
       setState(() {
-        todoList.add(task);
+        todoList.add(TodoItem(task, false));
       });
     }
   }
@@ -29,7 +29,7 @@ class _TodoState extends State<Todo> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Remove ${todoList[index]} ?'),
+            title: Text('Remove ${todoList[index].title} ?'),
             actions: [
               TextButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -45,7 +45,7 @@ class _TodoState extends State<Todo> {
         });
   }
 
-  Widget checkBox() {
+  /*Widget checkBox() {
     return Checkbox(
         value: isChecked,
         onChanged: (bool? value) {
@@ -53,28 +53,28 @@ class _TodoState extends State<Todo> {
             isChecked = value!;
           });
         });
-  }
+  }*/
 
   Widget listTile(index) {
     return ListTile(
-      title: Text(todoList[index]),
+      title: Text(todoList[index].title),
       onLongPress: () => promptRemoveItem(index),
     );
   }
 
   Widget checkBoxListTile(index) {
     return CheckboxListTile(
-        title: Text(todoList[index]),
-        value: isChecked,
-        selected: isChecked,
-        onChanged: (bool? value) {
-          if(value!) {
-            promptRemoveItem(index);
-          }
-          setState(() {
-            isChecked = value!;
-          });
-        },
+      title: Text(todoList[index].title),
+      value: todoList[index].checkStatus,
+//      selected: isChecked,
+      onChanged: (bool? value) {
+        if (value!) {
+          promptRemoveItem(index);
+        }
+        setState(() {
+          todoList[index].checkStatus = value;
+        });
+      },
       controlAffinity: ListTileControlAffinity.leading,
     );
   }
@@ -86,16 +86,18 @@ class _TodoState extends State<Todo> {
         title: Text('Todo List'),
         centerTitle: true,
       ),
-      body: ListView.builder(
-          itemCount: todoList.length,
-          itemBuilder: (context, index) {
-            return Container(
-              margin: EdgeInsets.all(1.5),
-              child: Card(
-                child: checkBoxListTile(index),
-              ),
-            );
-          }),
+      body: Container(
+        child: ListView.builder(
+            itemCount: todoList.length,
+            itemBuilder: (context, index) {
+              return Container(
+                margin: EdgeInsets.all(1.5),
+                child: Card(
+                  child: checkBoxListTile(index),
+                ),
+              );
+            }),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           dynamic input = await Navigator.pushNamed(context, '/new-todo');
