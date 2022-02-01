@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class NewTodo extends StatelessWidget {
-
   final controller = TextEditingController();
 
   @override
@@ -9,6 +8,7 @@ class NewTodo extends StatelessWidget {
     void addAndRedirect(String text) {
       Navigator.pop(context, {'inputValue': text});
     }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Add a todo'),
@@ -39,6 +39,7 @@ class NewTodo extends StatelessWidget {
           ],
         ),
       ),
-    );;
+    );
+    ;
   }
 }
